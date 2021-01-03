@@ -1,36 +1,59 @@
-import React from 'react';
+import React from "react";
 
-import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
+import whatsappIcon from "../../assets/images/icons/whatsapp.svg";
+import api from "../../services/api";
 
-import './style.css'
+import "./style.css";
 
-function TeacherItem() {
-    return(
-        <article className="teacher-item">
-        <header>
-        <img src="https://instagram.fjdo1-2.fna.fbcdn.net/v/t51.2885-15/e35/65852390_481627665740637_6964858719144104171_n.jpg?_nc_ht=instagram.fjdo1-2.fna.fbcdn.net&_nc_cat=109&_nc_ohc=cJmCZhJ2ZFUAX-lzgbj&tp=1&oh=2c4c9f9d703441eb222507e86fa73537&oe=60118A21" alt=""/>
-    <div>
-        <strong>Rômulo Lima</strong>
-        <span>Web Development</span>
-    </div>
-    </header>
-    <p>
-        Explorador apaixonado por autocrescimento
-        <br/><br/>
-        Desenvolvedor web há 5 anos, graduado em Ciência da Computação pela Universidade Estadual do Ceará. Ensino e tutoria sobre as principais linguagens do mercado (NodeJS, ReactJS, ReactNative, Ruby) junto com Frameworks (Meteor, Adonis, Rails)
-    </p>
-
-    <footer>
-        <p>Preço/hora
-        <strong>R$ 60,00</strong>
-        </p>
-        <button type="button">
-            <img src={whatsappIcon} alt="WhatsApp"/>
-            Entrar em contato
-        </button>
-    </footer>
-    </article>
-    );
+export interface Teacher {
+        id: number;
+        avatar: string;
+        bio: string;
+        cost: number;
+        name: string;
+        subject: string;
+        whatsapp: string;
 }
+
+interface TeacherProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherProps> = ({ teacher }) => {
+
+    function createNewConnection() {
+        api.post('connections', {
+            user_id: teacher.id
+        })
+    }
+
+  return (
+    <article className="teacher-item">
+      <header>
+        <img
+          src={teacher.avatar}
+          alt=""
+        />
+        <div>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
+        </div>
+      </header>
+
+      <p>{teacher.bio}</p>
+
+      <footer>
+        <p>
+          Preço/hora
+          <strong>R$ {teacher.cost}</strong>
+        </p>
+        <a target="_blank" onClick={createNewConnection} href={`https://wa.me/${teacher.whatsapp}`}>
+          <img src={whatsappIcon} alt="WhatsApp" />
+          Entrar em contato
+        </a>
+      </footer>
+    </article>
+  );
+};
 
 export default TeacherItem;
